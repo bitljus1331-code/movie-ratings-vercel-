@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Моя коллекция</title>
+<style>
+:root{--panel:rgba(18,21,31,.92);--panel2:rgba(28,34,49,.93);--text:#f5f7fa;--muted:#9da7b5;--accent:#f5c518;--danger:#ff6675;--border:rgba(255,255,255,.09)}
+*{box-sizing:border-box}
+html{min-height:100%;background:#090a0f}
+body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+radial-gradient(ellipse at 50% -5%,rgba(255,232,180,.14) 0%,rgba(255,206,95,.055) 26%,transparent 58%),
+radial-gradient(ellipse at 8% 45%,rgba(188,25,45,.12),transparent 34%),
+radial-gradient(ellipse at 92% 45%,rgba(40,57,110,.14),transparent 35%),
+linear-gradient(180deg,#08090e 0%,#0c0f17 55%,#08090e 100%);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.18;background:
+repeating-linear-gradient(90deg,transparent 0 54px,rgba(255,255,255,.055) 54px 58px,transparent 58px 112px),
+linear-gradient(180deg,transparent 0 78%,rgba(0,0,0,.72) 100%)}
+.cinema-lights{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
+.cinema-lights:before,.cinema-lights:after{content:"";position:absolute;top:-140px;width:42vw;height:85vh;filter:blur(22px);opacity:.11;background:linear-gradient(180deg,rgba(255,240,180,.75),transparent 75%)}
+.cinema-lights:before{left:4%;transform:rotate(17deg);transform-origin:top left}.cinema-lights:after{right:4%;transform:rotate(-17deg);transform-origin:top right}
+.wrap{max-width:1220px;margin:auto;padding:28px 18px 52px}
+header{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}
+.brand h1{margin:0;font-size:clamp(30px,4vw,48px);letter-spacing:-.035em}.brand .sub{color:var(--muted);margin-top:5px}
+.badge{background:rgba(17,20,29,.86);backdrop-filter:blur(10px);border:1px solid var(--border);padding:10px 14px;border-radius:14px;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:rgba(12,15,22,.84);border:1px solid var(--border);padding:7px;border-radius:18px;margin-bottom:18px;backdrop-filter:blur(12px)}
+.tab{border:0;border-radius:13px;padding:13px 16px;font-size:16px;font-weight:800;color:var(--muted);background:transparent;cursor:pointer;transition:.18s}
+.tab.active{background:linear-gradient(135deg,var(--accent),#f7d857);color:#121212;box-shadow:0 8px 24px rgba(245,197,24,.17)}
+.grid{display:grid;grid-template-columns:370px 1fr;gap:20px}
+.card{background:var(--panel);backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:22px;box-shadow:0 18px 60px rgba(0,0,0,.28)}
+.form{padding:18px;position:sticky;top:18px;height:max-content}
+h2{margin:0 0 14px;font-size:20px}label{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+input,textarea,select{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:11px 12px;outline:none}
+textarea{min-height:86px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{border:0;border-radius:12px;padding:11px 14px;font-weight:700;cursor:pointer}
+.primary{background:linear-gradient(135deg,var(--accent),#f7d857);color:#111;width:100%;margin-top:14px}
+.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}.danger{background:rgba(255,102,117,.12);color:#ff8894;border:1px solid rgba(255,102,117,.24)}
+.imdbbox{background:rgba(8,10,15,.68);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:14px}
+.imdbtitle{display:flex;align-items:center;gap:8px;font-weight:800}.imdbmark{background:#f5c518;color:#000;border-radius:5px;padding:2px 6px;font-size:13px}
+.apirow{display:flex;gap:8px}.apirow input{flex:1}.apirow button{white-space:nowrap}.help{font-size:12px;color:var(--muted);line-height:1.45;margin-top:7px}
+.status{font-size:12px;margin-top:8px;min-height:18px}.ok{color:#69d99a}.err{color:#ff8792}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 14px 0}.stat{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:12px}.stat b{display:block;font-size:22px;margin-top:3px}.meta{color:var(--muted);font-size:13px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;padding:14px}.toolbar input{flex:1 1 220px}.toolbar select{width:auto}
+.movies{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:0 14px 14px}.movie{display:grid;grid-template-columns:98px 1fr;gap:14px;background:var(--panel2);border:1px solid var(--border);border-radius:17px;padding:12px}
+.poster{width:98px;height:145px;object-fit:cover;border-radius:12px;background:#0f1219}.placeholder{display:flex;align-items:center;justify-content:center;font-size:28px;color:#667085}
+.movie h3{margin:2px 0 4px;font-size:18px}.kind{display:inline-flex;margin-top:3px;padding:3px 7px;border-radius:999px;font-size:11px;font-weight:800;background:rgba(245,197,24,.10);color:#efd96f;border:1px solid rgba(245,197,24,.16)}
+.rating{color:var(--accent);font-size:17px;font-weight:800;margin:8px 0}.note{font-size:14px;color:#cbd1da;line-height:1.4;white-space:pre-wrap}
+.actions{display:flex;gap:8px;margin-top:10px}.actions button{padding:7px 10px;font-size:12px}
+.backup-box{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.backup-title{font-size:13px;color:var(--muted);margin-bottom:8px}
+.backup-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.backup-row button{font-size:12px}
+.empty{text-align:center;color:var(--muted);padding:58px 15px}
+@media(max-width:920px){.grid{grid-template-columns:1fr}.form{position:static}}@media(max-width:650px){header{flex-direction:column;align-items:flex-start}.movies{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="cinema-lights"></div>
+<div class="wrap">
+<header><div class="brand"><h1>🎬 Моя коллекция</h1><div class="sub">Фильмы и сериалы, которые я посмотрел</div></div><div class="badge" id="countBox">0</div></header>
+
+<div class="tabs">
+<button class="tab active" data-tab="movie">🎞️ Фильмы</button>
+<button class="tab" data-tab="series">📺 Сериалы</button>
+</div>
+
+<div class="grid">
+<section class="card form">
+<div class="imdbbox">
+<div class="imdbtitle"><span class="imdbmark">IMDb</span> Импорт</div>
+<label>Ссылка IMDb или ID</label>
+<div class="apirow"><input id="imdbUrl" placeholder="https://www.imdb.com/title/tt0816692/"><button class="secondary" id="loadImdb">Загрузить</button></div>
+<div class="help">Тип определяется автоматически.</div><div id="imdbStatus" class="status"></div>
+</div>
+<h2 id="formTitle">Добавить фильм</h2>
+<label>Тип</label><select id="itemType"><option value="movie">Фильм</option><option value="series">Сериал</option></select>
+<label>Название</label><input id="title" placeholder="Название">
+<div class="row"><div><label>Год</label><input id="year" type="number" min="1888" max="2100"></div><div><label>Моя оценка</label><input id="rating" type="number" min="0" max="10" step="0.1" placeholder="6,1"></div></div>
+<label>Дата просмотра</label><input id="date" type="date">
+<label>Постер</label><input id="poster" type="url" placeholder="Заполнится автоматически">
+<label>Заметка</label><textarea id="note" placeholder="Моё впечатление..."></textarea>
+<button class="primary" id="saveBtn">Сохранить фильм</button>
+<div class="backup-box">
+  <div class="backup-title">Резервная копия списка</div>
+  <div class="backup-row">
+    <button class="secondary" id="exportBtn" type="button">⬇ Экспорт списка</button>
+    <button class="secondary" id="importBtn" type="button">⬆ Импорт списка</button>
+  </div>
+  <input id="importFile" type="file" accept=".json,application/json" hidden>
+  <div class="help">Экспортируй список перед обновлением сайта. Потом этот файл можно импортировать на другом адресе или устройстве.</div>
+</div>
+</section>
+
+<main class="card">
+<div class="stats"><div class="stat"><span class="meta" id="statLabel">Просмотрено фильмов</span><b id="statCount">0</b></div><div class="stat"><span class="meta">Средняя оценка</span><b id="statAvg">—</b></div><div class="stat"><span class="meta">Лучшая оценка</span><b id="statBest">—</b></div></div>
+<div class="toolbar"><input id="search" placeholder="Поиск..."><select id="sort"><option value="newest">Недавно добавленные</option><option value="ratingDesc">Оценка: от высокой</option><option value="ratingAsc">Оценка: от низкой</option><option value="title">По названию</option><option value="yearDesc">По году</option></select></div>
+<div id="movies" class="movies"></div><div id="empty" class="empty">Пока здесь ничего нет.</div>
+</main>
+</div>
+</div>
+
+<script>
+const KEY='my_movies_vercel_v1';
+let movies=JSON.parse(localStorage.getItem(KEY)||'[]').map(m=>({...m,type:m.type||'movie'}));
+let editingId=null,activeTab='movie';
+const $=id=>document.getElementById(id);
+localStorage.setItem(KEY,JSON.stringify(movies));
+function imdbId(v){const m=String(v).match(/tt\d{5,12}/i);return m?m[0]:null}
+function formatRating(n){return Number(n).toFixed(1).replace('.',',')}
+function safe(s=''){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;")}
+function saveData(){localStorage.setItem(KEY,JSON.stringify(movies))}
+function status(msg,ok=true){$('imdbStatus').className='status '+(ok?'ok':'err');$('imdbStatus').textContent=msg}
+function label(t){return t==='series'?'Сериал':'Фильм'}
+
+function setTab(tab){
+ activeTab=tab;
+ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+ if(!editingId)$('itemType').value=tab;
+ $('formTitle').textContent=editingId?'Редактировать запись':`Добавить ${tab==='series'?'сериал':'фильм'}`;
+ $('saveBtn').textContent=editingId?'Сохранить изменения':`Сохранить ${tab==='series'?'сериал':'фильм'}`;
+ render();
+}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+$('itemType').onchange=()=>{if(!editingId)setTab($('itemType').value)};
+
+$('loadImdb').onclick=async()=>{
+ const id=imdbId($('imdbUrl').value);if(!id)return status('Не нашёл IMDb ID.',false);
+ status('Загружаю...');
+ try{
+  const r=await fetch('/api/imdb?id='+encodeURIComponent(id));const d=await r.json();
+  if(!r.ok)throw new Error(d.error||'Ошибка загрузки');
+  $('title').value=d.title||'';$('year').value=d.year||'';$('poster').value=d.poster||'';
+  const t=(d.type==='series'||d.type==='episode')?'series':'movie';
+  $('itemType').value=t;setTab(t);status(`Загружено: ${d.title} · ${label(t)}`);
+ }catch(e){status('Ошибка: '+e.message,false)}
+};
+
+$('saveBtn').onclick=()=>{
+ const title=$('title').value.trim();const rating=Number(String($('rating').value).replace(',','.'));
+ if(!title)return alert('Введите название.');
+ if(!Number.isFinite(rating)||rating<0||rating>10)return alert('Оценка должна быть от 0 до 10, например 6,1.');
+ const old=movies.find(m=>m.id===editingId),type=$('itemType').value;
+ const m={id:editingId||crypto.randomUUID(),title,year:$('year').value?Number($('year').value):null,rating,date:$('date').value||'',poster:$('poster').value.trim(),note:$('note').value.trim(),imdbId:imdbId($('imdbUrl').value)||'',type,createdAt:old?.createdAt||Date.now()};
+ movies=editingId?movies.map(x=>x.id===editingId?m:x):[m,...movies];saveData();reset(type);setTab(type);
+};
+
+function reset(type=activeTab){editingId=null;['imdbUrl','title','year','rating','date','poster','note'].forEach(id=>$(id).value='');$('itemType').value=type;status('')}
+function editMovie(id){const m=movies.find(x=>x.id===id);if(!m)return;editingId=id;setTab(m.type||'movie');$('imdbUrl').value=m.imdbId||'';$('title').value=m.title||'';$('year').value=m.year||'';$('rating').value=m.rating??'';$('date').value=m.date||'';$('poster').value=m.poster||'';$('note').value=m.note||'';$('itemType').value=m.type||'movie';window.scrollTo({top:0,behavior:'smooth'})}
+function deleteMovie(id){const m=movies.find(x=>x.id===id);if(!m||!confirm(`Удалить «${m.title}»?`))return;movies=movies.filter(x=>x.id!==id);saveData();render()}
+
+function render(){
+ const q=$('search').value.trim().toLowerCase(),sort=$('sort').value;
+ let list=movies.filter(m=>(m.type||'movie')===activeTab).filter(m=>m.title.toLowerCase().includes(q)||String(m.year||'').includes(q));
+ list.sort((a,b)=>sort==='ratingDesc'?b.rating-a.rating:sort==='ratingAsc'?a.rating-b.rating:sort==='title'?a.title.localeCompare(b.title,'ru'):sort==='yearDesc'?(b.year||0)-(a.year||0):b.createdAt-a.createdAt);
+ $('movies').innerHTML=list.map(m=>`<article class="movie">${m.poster?`<img class="poster" src="${safe(m.poster)}">`:`<div class="poster placeholder">${activeTab==='series'?'📺':'🎞️'}</div>`}<div><h3>${safe(m.title)}</h3><div class="meta">${m.year||'Год не указан'}</div><div class="kind">${label(m.type||'movie')}</div><div class="rating">★ ${formatRating(m.rating)} / 10</div>${m.note?`<div class="note">${safe(m.note)}</div>`:''}<div class="actions"><button class="secondary" onclick="editMovie('${m.id}')">Изменить</button><button class="danger" onclick="deleteMovie('${m.id}')">Удалить</button></div></div></article>`).join('');
+ $('empty').style.display=list.length?'none':'block';$('empty').textContent=activeTab==='series'?'Пока сериалов нет.':'Пока фильмов нет.';
+ const items=movies.filter(m=>(m.type||'movie')===activeTab),mc=movies.filter(m=>(m.type||'movie')==='movie').length,sc=movies.filter(m=>(m.type||'movie')==='series').length;
+ $('countBox').textContent=`🎞️ ${mc} · 📺 ${sc}`;$('statCount').textContent=items.length;$('statLabel').textContent=activeTab==='series'?'Просмотрено сериалов':'Просмотрено фильмов';
+ if(items.length){$('statAvg').textContent=formatRating(items.reduce((s,m)=>s+Number(m.rating),0)/items.length);$('statBest').textContent=formatRating(Math.max(...items.map(m=>Number(m.rating))))}else{$('statAvg').textContent='—';$('statBest').textContent='—'}
+}
+
+$('exportBtn').onclick=()=>{
+  const payload={
+    version:1,
+    exportedAt:new Date().toISOString(),
+    movies:movies
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  const d=new Date();
+  const date=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  a.href=URL.createObjectURL(blob);
+  a.download=`movie-ratings-backup-${date}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+
+$('importBtn').onclick=()=>$('importFile').click();
+
+$('importFile').onchange=async(e)=>{
+  const file=e.target.files?.[0];
+  if(!file)return;
+  try{
+    const parsed=JSON.parse(await file.text());
+    const incoming=Array.isArray(parsed)?parsed:parsed.movies;
+    if(!Array.isArray(incoming))throw new Error('В файле не найден список фильмов.');
+
+    const clean=incoming.filter(x=>x&&typeof x.title==='string'&&Number.isFinite(Number(x.rating))).map(x=>({
+      ...x,
+      type:x.type==='series'?'series':'movie',
+      rating:Number(x.rating),
+      createdAt:Number(x.createdAt)||Date.now(),
+      id:x.id||crypto.randomUUID()
+    }));
+
+    const keyOf=m=>{
+      if(m.imdbId)return `imdb:${m.imdbId}:${m.type||'movie'}`;
+      return `name:${String(m.title).trim().toLowerCase()}:${m.year||''}:${m.type||'movie'}`;
+    };
+
+    const merged=new Map(movies.map(m=>[keyOf(m),m]));
+    clean.forEach(m=>merged.set(keyOf(m),m));
+    movies=[...merged.values()].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    saveData();
+    render();
+    alert(`Импортировано записей: ${clean.length}. Всего в коллекции: ${movies.length}.`);
+  }catch(err){
+    alert('Не удалось импортировать файл: '+err.message);
+  }finally{
+    e.target.value='';
+  }
+};
+
+$('search').oninput=render;$('sort').onchange=render;setTab('movie');
+</script>
+</body>
+</html>
